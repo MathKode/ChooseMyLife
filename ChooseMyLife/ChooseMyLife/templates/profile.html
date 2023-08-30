@@ -406,7 +406,7 @@ input:focus{
                     {% for site, username, pass_site in mp_list %}
                         <li>
                             <div class="position">
-                                <div onclick="to_clipboard('{{ pass_site }}');">
+                                <div onclick="to_clipboard(`{{ pass_site }}`);">
                                     <div class="app_name">
                                         <a>{{ site }}<span id="underscore">_</span></a>
                                     </div>
@@ -418,7 +418,7 @@ input:focus{
                                         </div>
                                     </div>
                                 </div>
-                                <div class="picture" onclick="change_password('{{ site }}','{{ username }}','{{ pass_site }}')">
+                                <div class="picture" onclick="change_password(`{{ site }}`,`{{ username }}`,`{{ pass_site }}`)">
                                     <img src="../../media/pen.png">
                                 </div>
                             </div>

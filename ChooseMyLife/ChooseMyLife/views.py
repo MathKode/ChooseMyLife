@@ -214,6 +214,7 @@ def create_ID(first_name,last_name,birthday,city,sex,password):
     for i in info:
         info_crypt.append(crypt_data(i,password))
     info_crypt2=";info;".join(info_crypt)
+    print("NEW MEMBER INFO CRYPT :",info_crypt)
     c.append(crypt_data(info_crypt2,password))
     file = open("ID.txt","w")
     file.write("\n".join(c))
@@ -274,74 +275,91 @@ def read_ID(password):
     return decrypt2
 
 
-def _position(lettre, alphabet):
+def position(letter, alphabet):
     t=0
     for i in alphabet:
-        if i==lettre:
+        if i == letter:
             return t
         t+=1
     return 0
 
-def _shuffler_alphabet(alphabet, password):
-    shuffle_alphabet=""
-    t=0
-    for l in alphabet:
-        if _position(password[t%len(password)],alphabet)%2==0:
-            shuffle_alphabet = l + shuffle_alphabet
+def shuffle(alphabet, password):
+    result=""
+    i=0
+    for letter in alphabet:
+        if position(password[i],alphabet)%2==0:
+            result = result + letter
         else:
-            shuffle_alphabet = shuffle_alphabet + l
-        t+=1
-    return shuffle_alphabet
+            result = letter + result
+        i+=1
+        if i >= len(password):
+            i=0
+    return result
 
-def create_resultdic(alphabet):
-    result={}
-    result_aplhabet="AZERTYUIOPQSDFGHJKLMWXCVBN"
-    c = [0, 0]
-    for i in alphabet:
-        c[0] = c[0] + 1
-        if c[0] >= len(result_aplhabet):
+def create_result_ls(password):
+    alphabet = shuffle("ABCDEFGHIJKLMNOPQRSTUVWXYZ", password.upper())
+    result=[]
+    c=[-1,0]
+    while c[1] < (len(alphabet)-1):
+        c[0]= c[0] + 1
+        if c[0] >= len(alphabet):
             c[0] = 0
             c[1] = c[1] + 1
-        combinaison = result_aplhabet[c[0]] + result_aplhabet[c[1]]
-        result[i]=combinaison
-    #print(result)
+        r = ''
+        for i in c:
+            r+=alphabet[i]
+        result.append(r)
+    return result
+        
+
+def crypt_v2(data, password):
+    alphabet=" azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBN1234567890&é\"'(-è_çà)=+~#{}[]|`\\^@^¨$*ù%!§:/;.,?"
+    result_shape = create_result_ls(password)
+    msg = []
+    for i in data:
+        msg.append(position(i, alphabet))
+    msg_crypt=[]
+    t=0
+    for nb in msg:
+        n2 = position(password[t], alphabet)
+        msg_crypt.append(nb+n2)
+        t+=1
+        if t>= len(password):
+            t=0
+    result=""
+    for nb in msg_crypt:
+        result += result_shape[nb]
     return result
 
-def create_reverse_resultdic(alphabet):
-    dic = create_resultdic(alphabet) #INVERSE KEY <-> VALUE
-    new_dic = {} # 'AK': '('
-    for key in dic:
-        new_dic[dic[key]] = key
-    #print(new_dic)
-    return new_dic
+def decrypt_v2(data, password):
+    alphabet=" azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBN1234567890&é\"'(-è_çà)=+~#{}[]|`\\^@^¨$*ù%!§:/;.,?"
+    result_shape = create_result_ls(password)
+    msg = []
+    for i in range(0,len(data),2):
+        section=data[i:i+2]
+        t=0
+        for shape in result_shape:
+            if shape == section:
+                msg.append(t)
+            t+=1
+    msg_decrypt=[]
+    t=0
+    for nb in msg:
+        n2 = position(password[t], alphabet)
+        msg_decrypt.append(nb-n2)
+        t+=1
+        if t>= len(password):
+            t=0
+    result=""
+    for i in msg_decrypt:
+        result += alphabet[i]
+    return result
 
 def crypt_data(data, password):
-    alphabet = " azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBN&é\"'()-è_çà=^$*ù!:;,~#{[]|}`\\@?./§%µ£¨+°0987654321ÀÈÙÌÒùìòôîûÔÎÛÊÂâêöïüëäÖÏÜËÄñõÑÕãÃ"
-    shuffle_alphabet = _shuffler_alphabet(alphabet, password)
-    result_alphabet=create_resultdic(shuffle_alphabet)
-    result=""
-    for i in range(0,len(data)):
-        nb=(_position(data[i],shuffle_alphabet) + _position(password[i%len(password)],shuffle_alphabet))%len(shuffle_alphabet)
-        letter = shuffle_alphabet[nb]
-        new_letter = result_alphabet[letter]
-        result+=new_letter
-    return result
+    return crypt_v2(data, password)
 
 def decrypt_data(data, password):
-    alphabet = " azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBN&é\"'()-è_çà=^$*ù!:;,~#{[]|}`\\@?./§%µ£¨+°0987654321ÀÈÙÌÒùìòôîûÔÎÛÊÂâêöïüëäÖÏÜËÄñõÑÕãÃ"
-    shuffle_alphabet = _shuffler_alphabet(alphabet, password)
-    result_alphabet=create_reverse_resultdic(shuffle_alphabet)
-    new_message=""
-    for i in range(0,len(data),2):
-        new_message += result_alphabet[data[i:i+2]]
-    #print(new_message)
-    result=""
-    for i in range(0,len(new_message)):
-        nb=(_position(new_message[i],shuffle_alphabet) - _position(password[i%len(password)],shuffle_alphabet))
-        if nb<0:
-            nb+=len(shuffle_alphabet)
-        result+=shuffle_alphabet[nb]
-    return result
+    return decrypt_v2(data, password)
 
 
 def my_hash(txt):
@@ -464,8 +482,8 @@ def supp_password(hash_id, password, site_name, username):
 def _compare_letter(l1,l2, alphabet):
     if l1 not in alphabet: l1=alphabet[-1]
     if l2 not in alphabet: l2=alphabet[-1]
-    n1 = _position(l1, alphabet)
-    n2 = _position(l2, alphabet)
+    n1 = position(l1, alphabet)
+    n2 = position(l2, alphabet)
     if n1 > n2:
         return 0
     elif n1 == n2:
