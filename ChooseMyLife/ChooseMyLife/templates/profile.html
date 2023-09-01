@@ -54,6 +54,9 @@
     function delete_profile(id) {
         window.location.href = "../../desktop?remove=" + id
     }
+    function generate_id() {
+        window.location.href = "../../id?fname={{ first_name }}&lname={{ last_name }}&birth={{ birthday }}&sex={{ sex }}&picture_input={{ pic }}"
+    }
 </script>
 <!-- ------ -->
 <script>
@@ -386,7 +389,7 @@ input:focus{
             <h3 id="title_name" onclick="change_information('{{ hash_id }}');">{{ first_name }} {{ last_name }}<img src="../../media/pen.png" id="picture_title"></h3>
         </header>
         <div id="button_div">
-            <button onclick="document_page();">ID</button>
+            <button onclick="generate_id();">ID</button>
             <button onclick="delete_profile('{{ hash_id }}');">Delete</button>
             <button onclick="desktop_page();">Desktop</button>
             <button onclick="home_page();">Home</button>

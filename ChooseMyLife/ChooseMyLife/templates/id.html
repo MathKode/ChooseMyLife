@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<!-- HEADER -->
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
+    html {
+        margin: 0px;
+        padding: 0px;
+    }
+    body {
+        margin: 0px;
+        padding: 0px;
+    }
+    header {
+        width: 100%;
+        background-color: white;
+        text-align: center;
+        box-shadow: 0px 3px 5px black;
+        font-family: 'Ubuntu', sans-serif;
+        font-weight: 400;
+        font-size: 25px;
+    }
+    header h3 {
+        padding: 7px;
+        margin: 0px;
+    }
+    #button_div {
+        position:absolute;
+        right:5px;
+        top: 15px;
+    }
+    #button_div button {
+        border: none;
+        border-radius: 3px;
+        height: 20px;
+        background-color: rgb(230, 230, 230);
+        font-family: 'Ubuntu', sans-serif;
+        font-size: 15px;
+        padding: 0px 5px;
+    }
+    #button_div button:hover {
+        background-color: rgb(216, 216, 216);
+    }
+</style>
+<script>
+    function desktop_page() {
+        window.location.href = "../../desktop"
+    }
+    function home_page() {
+        window.location.href = "../../"
+    }
+</script>
+<!-- ------ -->
+<script>
+function fill_info() {
+    var query = window.location.search.substring(1); 
+    var vars = query.split("&"); 
+    var dic = {}; // Create an empty array
+    for (var i=0;i<vars.length;i++)
+    { 
+        var name = vars[i].split("=")[0];
+        var pair = vars[i].split("=")[1]; 
+        //alert(name + " :::: " + pair)
+        dic[name] = pair;
+    }
+    value = dic["fname"];
+    if (value != undefined){   
+        document.getElementById("fname_input").value = value;
+        exit_input('fname_input','fname')
+        initial_modif();
+    }
+    value = dic["lname"];
+    if (value != undefined){   
+        document.getElementById("lname_input").value = value;
+        exit_input('lname_input','name');
+        initial_modif();
+    }
+    value = dic["size"];
+    if (value != undefined){   
+        document.getElementById("size_input").value = value;
+        exit_input('size_input','size')
+    }
+    value = dic["city"];
+    if (value != undefined){   
+        document.getElementById("cityborn_input").value = value;
+        exit_input('cityborn_input','city')
+    }
+    value = dic["sex"];
+    if (value != undefined){   
+        document.getElementById("sex_input").value = value;
+        exit_input('sex_input','sex')
+    }
+    value = dic["number"];
+    if (value != undefined){   
+        document.getElementById("random_number").value = value;
+        exit_input('random_number','number')
+    } else {
+        r = "";
+        for (i=0;i<12;i++) {
+            r = r + String(Math.floor(Math.random() * 10));
+        }
+        document.getElementById("random_number").value = r;
+        exit_input('random_number','number')
+    }
+    value = dic["birth"];
+    if (value != undefined){   
+        document.getElementById("birthday_input").value = value;
+        exit_input('birthday_input','born');
+    }
+    value = dic["chronocode"];
+    if (value != undefined){   
+        document.getElementById("chrono_code").value = value;
+    }
+    value = dic["creation_month"];
+    if (value != undefined){   
+        document.getElementById("create_month").value = value;
+    }
+    value = dic["creation_year"];
+    if (value != undefined){   
+        document.getElementById("create_year").value = value;
+    }
+    value = dic["picture_input"];
+    if (value != undefined){   
+        document.getElementById("picture_input").value = value;
+        picture_change();
+    }
+    calcul_code();
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+   fill_info();
+}, false);
+
+function exit_input(input_id, txt_id) {
+    value = document.getElementById(input_id).value;
+    if (value != undefined & value != '') {
+        document.getElementById(txt_id).textContent = value;
+        
+    }
+}
+
+function calcul_code() {
+    name = document.getElementById("lname_input").value.toUpperCase();
+    fname = document.getElementById("fname_input").value.toUpperCase();
+    department = document.getElementById("department1").value;
+    while (department.length < 3) {
+        department = "0" + department
+    }
+    sex = document.getElementById("sex_input").value.toUpperCase();
+    number = document.getElementById("random_number").value;
+    birth = document.getElementById("birthday_input").value;
+    b = birth.split(" ").join('').split("/").join(';').split(';').join('.').split('.')
+    //alert(b)
+    if (b.length == 3) {
+        day = b[0]
+        month = b[1]
+        year = b[2]
+        if (day.length == 2 & month.length == 2 & year.length == 4) {
+            r1 = "IDFRA" + name
+            while (r1.length < 30) {
+                r1 = r1 + "<"
+            }
+            r1 = r1 + department + department
+            console.log(r1)
+            r2 = "" + number + fname
+            while (r2.length < 27) {
+                r2 = r2 + "<"
+            }
+            date = year.slice(2, 4) + month + day
+            r2 = r2 + date + checksums(date) + sex
+            final = checksums(r1 + r2)
+            r2 = r2 + final
+            document.getElementById("code1").value = r1
+            document.getElementById("code2").value = r2
+            exit_input('code1','under_line1')
+            exit_input('code2','under_line2')
+        } else {
+            alert("2 : The Years need to be DD.MM.YYYY format !")
+        }
+    } else {
+        alert("1 : The Years need to be DD.MM.YYYY format !")
+    }
+}
+function checksums(sentence){
+    sentence2 = sentence.toUpperCase()
+    alphabet = "<123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    nb = 0
+    facteur = 7
+    for (i=0;i<sentence2.length;i++) {
+        letter = sentence2.slice(i,i+1)
+        position = 0
+        for (t=0;t<alphabet.length;t++) {
+            if (alphabet.slice(t,t+1)==letter) {
+                position = t
+            }
+        }
+        //console.log(letter + " : " + position + "  f:" + facteur)
+        nb += position * facteur
+        if (facteur===7){
+            facteur=3
+        }else if (facteur===3){
+            facteur=1
+        }else if (facteur===1){
+            facteur=7
+        }
+    }
+    //console.log("nb " + nb)
+    result_nb = nb.toString()
+    //console.log("result nb " + result_nb)
+    last_digit = result_nb.slice(result_nb.length-1, result_nb.length)
+    return last_digit
+}
+
+function calcul_code2(){
+    year = document.getElementById("create_year").value;
+    month = document.getElementById("create_month").value;
+    department = document.getElementById("department1").value;
+    while (department.length < 3) {
+        department = "0" + department;
+    }
+    numeric_code = document.getElementById("chrono_code").value;
+    if (numeric_code.length != 4) {
+        numeric_code = "" + Math.floor(Math.random()*10).toString() + Math.floor(Math.random()*10).toString() + Math.floor(Math.random()*10).toString() + Math.floor(Math.random()*10).toString();
+        alert("Your Numeric code should have 4 numbers. Numeric code used : " + numeric_code);
+    }
+    if (year.length != 4) {
+        alert("YEAR CREATION Must have 4 numbers");
+    } else if (month.length != 2) {
+        alert("MONRH CREATION Must have 4 numbers");
+    } else {
+        r = "" + year.slice(2,4) + month + department + numeric_code;
+        s = checksums(r);
+        r = r + s;
+        document.getElementById("random_number").value = r;
+        exit_input('random_number','number');
+    }
+}
+
+function _department(from, to) {
+    document.getElementById(to).value = document.getElementById(from).value
+}
+
+function picture_change() {
+    src = document.getElementById("picture_input").value;
+    document.getElementById("picture").setAttribute("src",src);
+}
+
+function initial_modif() {
+    lname = document.getElementById("lname_input").value.toUpperCase();
+    fname = document.getElementById("fname_input").value.toUpperCase();
+    r = lname.slice(0,1) + fname.slice(0,1);
+    document.getElementById('initial').textContent = r;
+}
+
+function blur_change() {
+    blur_value = document.getElementById("blur_range").value;
+    msg = "blur(" + blur_value.toString() + "px)"
+    console.log(msg)
+    return msg
+    //document.getElementById("pic_div").style.webkitFilter = msg
+}
+function contrast_change() {
+    contrast_value = document.getElementById("contrast_range").value;
+    msg = "contrast(" + contrast_value.toString() + ")"
+    console.log(msg)
+    return msg
+    //document.getElementById("pic_div").style.webkitFilter = msg
+}
+function grey_change() {
+    grey_value = document.getElementById("grey_range").value;
+    msg = "grayscale(" + grey_value.toString() + "%)"
+    console.log(msg)
+    return msg
+    //document.getElementById("pic_div").style.webkitFilter = msg
+}
+function pic_modify() {
+    msg1 = blur_change()
+    msg2 = contrast_change()
+    msg3 = grey_change()
+    msg = msg1 + " " + msg2 + " " + msg3
+    document.getElementById("pic_div").style.webkitFilter = msg
+}
+</script>
+{% load static %}
+<style>
+
+#pic_div {
+    position: relative;
+    left: 0px;  /* stick it wherever it was positioned by default */
+    top: 0px;
+}
+#background {
+    width:600px;
+}
+#picture {
+    position: absolute;
+    filter: grayscale(100%);
+    transform: rotate(1.6deg);
+    left: 26px;
+    top: 97.8px;
+    width:164px;
+    height:214.5px;
+    object-fit: cover;
+    opacity: 1;
+}
+#picture_row {
+    position: absolute;
+    width:174px;
+    transform: rotate(0deg);
+    left: 20px;
+    top: 88px;
+}
+
+#middle_row {
+    /*
+    filter: grayscale(100%) drop-shadow(0 0 0 red);
+    opacity: 0.5;
+
+    position: absolute;
+    width:402.5px;
+    left: 185px;
+    top: 89px;
+    */
+    
+    position: absolute;
+    width:402.5px;
+    left: 185px;
+    top: 89px;
+    
+}
+#up_row {
+    position: absolute;
+    width:116px;
+    top: 76.3px;
+    left:274px;
+}
+
+@font-face {
+    font-family: 'BygonestTypewriter';
+    src: url({% static 'BygonestTypewriter.ttf' %});
+    font-weight: normal;
+    font-style: normal;
+}
+
+.txt1 {
+    opacity: 0.8;
+    letter-spacing: -2.5px;
+    font-size: 17px;
+    font-family: 'BygonestTypewriter';
+}
+
+#name {
+    opacity: 0.8;
+    position: absolute;
+    transform: rotate(1.6deg);
+    top: 83.5px;
+    left:242px;
+}
+#fname {
+    opacity: 0.8;
+    position: absolute;
+    transform: rotate(1.6deg);
+    top: 124.5px;
+    left:268px;  
+}
+#sex {
+    opacity: 0.8;
+    position: absolute;
+    transform: rotate(1.6deg);
+    top: 163px;
+    left:238px;
+    font-size: 18px;  
+}
+#city {
+    opacity: 0.8;
+    position: absolute;
+    transform: rotate(1.6deg);
+    top: 184.5px;
+    left:218.5px;
+}
+#size {
+    opacity: 0.8;
+    position: absolute;
+    transform: rotate(1.6deg);
+    top: 205.5px;
+    left:248px;
+}
+#born {
+    opacity: 0.8;
+    position: absolute;
+    transform: rotate(1.6deg);
+    top: 170px;
+    left:405px;
+}
+#number {
+    opacity: 0.8;
+    position: absolute;
+    transform: rotate(1.6deg);
+    top: 54px;
+    left:278px;
+}
+#initial {
+    position: absolute;
+    top: 90px;
+    left: 178px;
+    font-size: 10px;
+    transform: rotate(1.6deg);
+}
+
+@font-face {
+    font-family: 'SVBasicManual';
+    src: url('../fonts/SVBasicManual.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'OCRB';
+    src: url({% static 'OCR B 10 BT.ttf' %});
+    font-weight: normal;
+    font-style: normal;
+}
+
+.txt2 {
+    font-family: 'OCRB';
+    font-size: 22px;
+    letter-spacing: 0.68px;
+}
+#under_line1 {
+    position: absolute;
+    transform: rotate(1.5deg);
+    top: 313px;
+    left: 43.5px;
+}
+#under_line2 {
+    position: absolute;
+    transform: rotate(1.5deg);
+    top: 348px;
+    left: 43.5px; 
+}
+
+.rf {
+    position: absolute;
+    width:401px;
+}
+#rf1 {
+    left: -334px;
+    top: 79px;
+}
+#rf2 {
+    left: -269.5px;
+    top: 80px;
+}
+#rf3 {
+    left: -204px;
+    top: 81.5px;
+}
+#rf4 {
+    left: -138px;
+    top: 83px;
+}
+#rf5 {
+    left: -73px;
+    top: 84px;
+}
+#rf6 {
+    left: -7px;
+    top: 85.5px;
+}
+
+#rf7 {
+    left: -301px;
+    top: 130px;
+}
+#rf8 {
+    left: -236px;
+    top: 132px;
+}
+#rf9 {
+    left: -170px;
+    top: 133px;
+}
+#rf10 {
+    left: 91.5px;
+    top: 138px;
+}
+
+/*
+#pic_div {
+    filter:blur(0.5px);
+    filter: contrast(2);
+}
+*/
+
+#cni {
+    position: absolute;
+    width:600px;
+    opacity:0;
+    left: -3px;
+    top: 7px;
+}
+
+</style>
+<style>
+/* Style des inputs */
+@import url('https://fonts.googleapis.com/css2?family=REM:wght@300&display=swap');
+#info_div {
+    width: 575px;
+    font-family: 'REM', sans-serif;
+    font-size: 10px;
+    grid-template-columns: 30% 70%;
+    display: grid;
+}
+h1 {
+    margin:4px 0px 0px 0px;
+}
+#creation_div1 {
+    background-color: rgb(177, 219, 255);
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom:10px;
+}
+#c29 {
+    background-color: rgb(177, 219, 255);
+    padding: 15px;
+    border-radius: 10px; 
+    margin-bottom:10px;
+}
+
+
+
+#c1 {grid-row: 1; grid-column: 1;}
+#c2 {grid-row: 1; grid-column: 2;}
+
+.c3 {grid-row: 2; grid-column: 2; display:grid}
+#c4 {grid-row: 1; grid-column: 1;}
+.c5 {grid-row: 2; grid-column: 1;}
+#c6 {grid-row: 3; grid-column: 1;}
+.c7 {grid-row: 4; grid-column: 1;}
+#c8 {grid-row: 5; grid-column: 1;}
+.c9 {grid-row: 6; grid-column: 1;}
+#c10 {grid-row: 7; grid-column: 1;}
+.c11 {grid-row: 8; grid-column: 1;}
+.c12 {grid-row: 9; grid-column: 1;}
+
+#c13 {grid-row: 3; grid-column: 1;}
+#c14 {grid-row: 3; grid-column: 2;}
+#c15 {grid-row: 4; grid-column: 1;}
+#c16 {grid-row: 4; grid-column: 2;}
+#c17 {grid-row: 5; grid-column: 1;}
+#c18 {grid-row: 5; grid-column: 2;}
+#c19 {grid-row: 6; grid-column: 1;}
+#c20 {grid-row: 6; grid-column: 2;}
+#c21 {grid-row: 7; grid-column: 1;}
+#c22 {grid-row: 7; grid-column: 2;}
+#c23 {grid-row: 8; grid-column: 1;}
+#c24 {grid-row: 8; grid-column: 2;}
+#c25 {grid-row: 9; grid-column: 1;}
+#c26 {grid-row: 9; grid-column: 2;}
+#c27 {grid-row: 10; grid-column: 1;}
+#c28 {grid-row: 10; grid-column: 2;}
+
+#c29 {grid-row: 11; grid-column: 2; display: grid;}
+#c30 {grid-row: 1; grid-column: 1;}
+.c31 {grid-row: 2; grid-column: 1;}
+#c32 {grid-row: 3; grid-column: 1;}
+
+#c33 {grid-row: 12; grid-column: 1;}
+.c34 {grid-row: 12; grid-column: 2;}
+
+#c35 {grid-row: 13; grid-column: 1;}
+.c36 {grid-row: 13; grid-column: 2;}
+
+#c37 {grid-row: 14; grid-column: 1;}
+.c38 {grid-row: 14; grid-column: 2;}
+
+#c39 {grid-row: 15; grid-column: 1;}
+.c40 {grid-row: 15; grid-column: 2;}
+</style>
+<html>
+    <head>
+        <title>ID Generator</title>
+    </head>
+    <body>
+        <header>
+            <h3 id="title_name">Fake ID Creation</h3>
+        </header>
+        <div id="button_div">
+            <button onclick="desktop_page();">Desktop</button>
+            <button onclick="home_page();">Home</button>
+        </div>
+        <br>
+        <div id="info_div">
+            <h1 id="c1">CARD NUMBER</h1>
+            <div id="c2">
+                <input id="random_number" type="text" placeholder="12 Numbers" onchange="exit_input('random_number','number')">
+            </div>
+            <div id="creation_div1" class="c3">
+                <h1 id="c4">CREATE MONTH</h1>
+                <input id="create_month" class="c5" type="text" placeholder="Creation month MM">
+                <h1 id="c6">CREATE YEAR</h1>
+                <input id="create_year" class="c7" type="text" placeholder="Creation year YYYY">
+                <h1 id="c8">DEPARTMENT</h1>
+                <input id="department1" class="c9" type="text" placeholder="Department" onchange="_department('department1','department2')">
+                <h1 id="c10">CHRONOCODE</h1>
+                <input id="chrono_code" class="c11" type="text" placeholder="Chrono code index (4 digits)">
+                <button id="calcul_code2" class="c12" onclick="calcul_code2()">Calculate</button>
+            </div>
+            
+            <h1 id="c13">LAST NAME</h1>
+            <div class="n" id="c14">
+                <input id="lname_input" type="text" placeholder="Last Name" onchange="exit_input('lname_input','name');initial_modif()">
+            </div>
+
+            <h1 id="c15">FIRST NAME</h1>
+            <div class="n" id="c16">
+                <input id="fname_input" type="text" placeholder="First Name" onchange="exit_input('fname_input','fname');initial_modif()">
+            </div>
+
+            <h1 id="c17">GENDER</h1>
+            <div class="n" id="c18">
+                <input id="sex_input" type="text" placeholder="M/F" onchange="exit_input('sex_input','sex')">
+            </div>
+
+            <h1 id="c19">CHILDCITY</h1>
+            <div class="n" id="c20">
+                <input id="cityborn_input" type="text" placeholder="Born City" onchange="exit_input('cityborn_input','city')">
+            </div>
+
+            <h1 id="c21">SIZE</h1>
+            <div class="n" id="c22">
+                <input id="size_input" type="text" placeholder="1.80m" onchange="exit_input('size_input','size')">
+            </div>
+
+            <h1 id="c23">BIRTHDAY</h1>
+            <div class="n" id="c24">
+                <input id="birthday_input" type="text" placeholder="DD . MM . YYYY" onchange="exit_input('birthday_input','born')">
+            </div>
+
+            <h1 id="c25">LINE 1</h1>
+            <div class="n" id="c26">
+                <input id="code1" type="text" placeholder="Card Code 1" onchange="exit_input('code1','under_line1')">
+            </div>
+
+            <h1 id="c27">LINE 2</h1>
+            <div class="n" id="c28">
+                <input id="code2" type="text" placeholder="Card Code 2" onchange="exit_input('code2','under_line2')">
+            </div>
+            <div id="c29">
+                <h1 id="c30">DEPARTMENT</h1>
+                <input id="department2" class="c31" type="text" placeholder="Department" onchange="_department('department2','department1')">
+                <button id="c32" onclick="calcul_code();">Auto Calcul</button>
+            </div>
+            <h1 id="c33">PICTURE NAME</h1>
+            <input id="picture_input" class="c34" type="text" value="../media/p3.jpg" onchange="picture_change()">
+            <h1 id="c35">BLUR</h1>
+            <input class="c36" id="blur_range" type="range" min="0" max="5" step="0.1" value="0" onchange="pic_modify();">
+            <h1 id="c37">CONTRAST</h1>
+            <input class="c38" id="contrast_range" type="range" min="0" max="10" step="0.1" value="1" onchange="pic_modify();">
+            <h1 id="c39">GREY SCALE</h1>
+            <input class="c40" id="grey_range" type="range" min="0" max="100" step="1" value="0" onchange="pic_modify();">
+        </div>
+        <br><br>
+        <div id="pic_div">
+            
+            <img id="background" src="../media/background_id2.png">
+            <!-- CNI OFFICIELLE
+            <img id="cni" src="../media/cni1_ori.jpg">
+            -->
+            
+            <img id="picture" src="../media/p3.jpg">
+            <p id="name" class="txt1">KREDER</p>
+            <p id="fname" class="txt1">JULIEN</p>
+            <p id="sex" class="txt1">M</p>
+            <p id="city" class="txt1">PARIS</p>
+            <p id="size" class="txt1">1.40m</p>
+            <p id="born" class="txt1">19 .10 .2000</p>
+            <p id="number" class="txt1">123456789012</p>
+            <p id="under_line1" class="txt2">IDFRAKREDER<<<<<<<<<<<<<<<<<<<067067</p>
+            <p id="under_line2" class="txt2">1234567890120JULIEN<<<<<<<<0010192M3</p>
+            <p id="initial" class="txt1">KM</p>
+            <img id="picture_row" src="../media/picture_row.png">
+            <img id="middle_row" src="../media/middle_row.png">
+            <img id="up_row" src="../media/up_row.png">
+            <!-- FIRST LINE -->
+            <img id="rf1" class="rf" src="../media/rf.png">
+            <img id="rf2" class="rf" src="../media/rf.png">
+            <img id="rf3" class="rf" src="../media/rf.png">
+            <img id="rf4" class="rf" src="../media/rf.png">
+            <img id="rf5" class="rf" src="../media/rf.png">
+            <img id="rf6" class="rf" src="../media/rf.png">
+            <!-- SECOND LINE -->
+            <img id="rf7" class="rf" src="../media/rf.png">
+            <img id="rf8" class="rf" src="../media/rf.png">
+            <img id="rf9" class="rf" src="../media/rf.png">
+            <img id="rf10" class="rf" src="../media/rf.png">
+        </div>
+        <br><br>
+        <p>Please Note this is a student project and you should know it's forbidden to use a fake ID (5y in jail + 7500€)</p>
+        <p>So we did this to improve my acknowledge and you wan use it for FUN (as a fake monopoly dollars), we declined responsability in case of real use (so be smart : respect the law)</p>
+          
+    </body>
+</html>

@@ -54,13 +54,19 @@ def profile_render(request, hash_id):
     info = read_ID(password)
     first_name = "Profile"
     last_name = "Password"
+    birthday = ""
+    sex="M/F"
+    pic="../media/p3.jpg"
     for i in info:
         if i[0] == hash_id:
             if i[1] != "": first_name=i[1]
             if i[2] != "": last_name=i[2]
+            if i[3] != "": birthday=i[3]
+            if i[6] != "": sex=i[6]
+            if i[5] != "": pic="../media/" + i[5]
     mp_list = read_password(hash_id, password)
     print("MP LIST:",mp_list)
-    context={"hash_id":hash_id, "first_name":first_name, "last_name":last_name, "mp_list":mp_list}
+    context={"hash_id":hash_id, "first_name":first_name, "last_name":last_name, "mp_list":mp_list, "birthday":birthday, "sex":sex, "pic":pic}
     page = render(request, "profile.html", context)
     return page
 
@@ -192,6 +198,10 @@ def modify_profile_render(request, hash_id):
                "picture" : info[5],
                "sex" : info[6]}
     page = render(request, "modifyprofile.html",context)
+    return page
+
+def ID_render(request):
+    page = render(request, "id.html")
     return page
 
 

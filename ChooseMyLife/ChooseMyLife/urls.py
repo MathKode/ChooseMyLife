@@ -24,7 +24,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', homepage_render),
     path('desktop/', desktop_render),
-    path('newprofile',create_people_render),
+    path('newprofile/',create_people_render),
+    path('id/',ID_render),
     re_path(r'^profile/(?P<hash_id>\w+)/$', profile_render),
     re_path(r'^modify/(?P<hash_id>\w+)/$', modify_profile_render),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
