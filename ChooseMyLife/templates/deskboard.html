@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Handjet:wght@300&700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Phudu&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Yantramanav:wght@700&display=swap');
+
+html {
+    margin: 0px;
+    padding: 0px;
+    background: rgb(0,96,203);
+    background: linear-gradient(90deg, rgba(0,96,203,1) 3%, rgba(0,224,255,1) 100%);
+}
+
+#center {
+    display: flex;
+    justify-content: center;
+    width:100%;
+}
+
+#container {
+    display:grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fill, 300px);
+}
+
+
+
+.leaflet {
+    border:3px;
+    width:300px;
+    height:150px;
+    background-color: aliceblue;
+    border-radius: 5px;
+    display: grid;
+    border-style: solid;
+    border-color: aliceblue;
+}
+.picture {
+    grid-column: 1;
+    grid-row: 1 / 4; 
+}
+.name {
+    grid-column: 2 / 4;
+    grid-row: 1; 
+}
+.sex {
+    grid-column: 2;
+    grid-row: 2; 
+}
+.birthday {
+    grid-column: 3;
+    grid-row: 2; 
+}
+.city {
+    grid-column: 2 / 4;
+    grid-row: 3;  
+}
+
+
+
+
+.picture{
+    width:100px;
+    height: 150px;
+}
+.pdp {
+    padding: 10px;
+    width:80px;
+    height:130px;
+    object-fit: cover;
+}
+
+h1 {
+    font-family: 'Phudu', cursive;
+    font-weight: 400;
+    font-size: 25px;
+    width:185px;
+    height: 30px;
+    margin:0;
+    margin-right: -15px;
+    overflow: hidden;
+    padding-top: 20px;
+}
+h2 {
+    font-family: 'Handjet', cursive;
+    font-weight: 800;
+    font-size: 20px;
+    overflow: hidden;
+}
+.city {
+    width:185px; 
+    margin-right: -15px;
+    margin-top: -25px;
+}
+.sex {
+    width: 92px;
+    margin-top: -10px;
+}
+.birthday {
+    width: 92px;
+    margin-top: -10px;
+    margin-left: -10px;
+}
+
+
+
+.leaflet:hover {
+    border:2px;
+    border-style: solid;
+    border-color: black;
+}
+
+.id {
+    display: none;
+}
+
+#bt_div {
+    text-align: center;
+    width:300px;
+    height:150px;
+}
+#new {
+    margin-top: 10px;
+    width: 130px;
+    height: 130px;
+    border: solid 5px black;
+    border-radius: 10px;
+    border-color: #676767;
+    background-color: rgb(194, 194, 194);
+    font-family: 'Yantramanav', sans-serif;
+    font-size: 70px;
+    color:#676767;
+    transition: .4s;
+}
+
+#new:hover {
+    background-color: rgb(215, 215, 215);
+}
+
+</style>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    width = Math.floor((window.innerWidth-100)/306)*300+(Math.floor((window.innerWidth-100)/306)-1)*20;
+    document.getElementById("container").style.width = width + "px";
+}, false);
+window.addEventListener('resize', function() {
+    width = Math.floor((window.innerWidth-100)/300)*300+(Math.floor((window.innerWidth-100)/300)-1)*20;
+    document.getElementById("container").style.width = width + "px";
+}, false);
+function home_page() {
+	window.location.href = "../"
+}
+function new_page() {
+    window.location.href = "../newprofile"
+}
+function send(hash_id) {
+    window.location.href = "../profile/" + hash_id
+}
+</script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
+body {
+    margin: 0px;
+    padding: 0px;
+}
+header {
+    width: 100%;
+    background-color: white;
+    text-align: center;
+    box-shadow: 0px 3px 5px black;
+    font-family: 'Ubuntu', sans-serif;
+    font-weight: 400;
+    font-size: 25px;
+}
+header h3 {
+    padding: 7px;
+    margin: 0px;
+}
+#button_div {
+    position:absolute;
+    right:5px;
+    top: 15px;
+}
+#button_div button {
+    border: none;
+    border-radius: 3px;
+    height: 20px;
+    background-color: rgb(230, 230, 230);
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 15px;
+}
+#button_div button:hover {
+    background-color: rgb(216, 216, 216);
+}
+</style>
+<html>
+    <head>
+        <title>ChooseMyLife Desktop</title>
+    </head>
+    <body>
+        <header>
+            <h3>Choose a Personnality</h3>
+        </header>
+        <div id="button_div">
+            <button onclick="home_page();">Home</button>
+        </div>
+        <br>
+        <div id="center">
+            <div id="container">
+                {% for hash_id, first_name,last_name,birthday,city,picture,sex in people %}
+                    <div class="leaflet" onclick="send('{{ hash_id }}');">
+                        <div class="picture">
+                            <img src="../media/{{ picture }}" alt="?" class="pdp">
+                        </div>
+                        <div class="name">
+                            <h1>{{ first_name }} {{ last_name }}</h1>
+                        </div>
+                        <div class="sex">
+                            <h2>{{ sex }}</h2>
+                        </div>
+                        <div class="birthday">
+                            <h2>{{ birthday }}</h2>
+                        </div>
+                        <div class="city">
+                            <h2>{{ city }}</h2>
+                        </div>
+                        <p class="id">{{ hash_id }}</p>
+                    </div>
+                {% endfor %}
+                <div id="bt_div">
+                    <button id="new" onclick="new_page();">+</button>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
