@@ -162,7 +162,7 @@ function calcul_code() {
             }
             r1 = r1 + department + department
             console.log(r1)
-            r2 = "" + number + fname
+            r2 = "" + number + checksums(number) + fname
             while (r2.length < 27) {
                 r2 = r2 + "<"
             }
@@ -219,8 +219,8 @@ function calcul_code2(){
         department = "0" + department;
     }
     numeric_code = document.getElementById("chrono_code").value;
-    if (numeric_code.length != 4) {
-        numeric_code = "" + Math.floor(Math.random()*10).toString() + Math.floor(Math.random()*10).toString() + Math.floor(Math.random()*10).toString() + Math.floor(Math.random()*10).toString();
+    if (numeric_code.length != 5) {
+        numeric_code = "" + Math.floor(Math.random()*10).toString() + Math.floor(Math.random()*10).toString() + Math.floor(Math.random()*10).toString() + Math.floor(Math.random()*10).toString() + Math.floor(Math.random()*10).toString();
         alert("Your Numeric code should have 4 numbers. Numeric code used : " + numeric_code);
     }
     if (year.length != 4) {
@@ -229,8 +229,8 @@ function calcul_code2(){
         alert("MONRH CREATION Must have 4 numbers");
     } else {
         r = "" + year.slice(2,4) + month + department + numeric_code;
-        s = checksums(r);
-        r = r + s;
+        //s = checksums(r);
+        //r = r + s;
         document.getElementById("random_number").value = r;
         exit_input('random_number','number');
     }
