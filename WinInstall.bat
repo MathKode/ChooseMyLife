@@ -4,7 +4,7 @@ Windows\python.exe -m venv .venv/ChooseMyLife
 pip install django
 
 set /P id=Do you want start service at every start-up [Y/N] : 
-IF %id%==Y (
+IF "%id%"=="Y" (
   copy "Windows\start_server.bat"  "%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\start_server.bat"
 )
 
