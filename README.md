@@ -5,7 +5,7 @@ It's more than a simple local-password manager : yep, it's here to make easier t
 
 First Step : Get the script on your laptop !
 ```
-pip install https://github.com/MathKode/ChooseMyLife/
+git clone https://github.com/MathKode/ChooseMyLife/
 ```
 Or Download the zip here : [Zip_File](https://github.com/MathKode/ChooseMyLife/archive/refs/heads/main.zip)
 
