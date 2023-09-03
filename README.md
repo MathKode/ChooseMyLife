@@ -24,3 +24,12 @@ explorer .
 
 ```
 Then execute ``start_up.bat`` wherever on your laptop : it will launch the script !
+
+If you want to find the script by the search bar, so copy the start_up.bat to :
+```
+%ProgramData%\Microsoft\Windows\Start Menu\Programs\
+```
+If you want to execute the script at every start up, so copy the start_up.bat to :
+```
+%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\
+```
