@@ -18,12 +18,10 @@ cd ChooseMyLife\ChooseMyLife
 @echo off
 echo cd %cd% > start_up.bat
 echo python manage.py runserver >> start_up.bat
-
+@echo on
 echo.
 echo RUN AS ADMINISTRATOR :
 echo copy "%cd%\start_up.bat"  "%ProgramData%\Microsoft\Windows\Start Menu\Programs\choosemylife.bat"
 echo.
-
-@echo on
 python manage.py runserver
 ```
