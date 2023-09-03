@@ -15,7 +15,9 @@ Second Step : Install the python lib.
 ```
 pip install django
 cd ChooseMyLife\ChooseMyLife
+@echo off
 echo cd %cd% > start_up.bat
 echo python manage.py runserver >> start_up.bat
+@echo on
 python manage.py runserver
 ```
