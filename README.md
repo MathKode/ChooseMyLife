@@ -17,8 +17,8 @@ First configure the start up file
 pip install django
 cd ChooseMyLife\ChooseMyLife
 @echo off
-echo cd %cd% > start_up.bat
-echo python manage.py runserver >> start_up.bat
+echo cd %cd% > start_up.ps1
+echo python manage.py runserver >> start_up.ps1
 @echo on
 explorer .
 
