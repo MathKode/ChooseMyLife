@@ -12,8 +12,8 @@ Or Download the zip here : [Zip_File](https://github.com/MathKode/ChooseMyLife/a
 
 Second Step : Install the python lib.
 
-Here you have 2 options, either you run the auto-script (``WinInstall.bat``) or you do it manually :
 ```
 pip install django
-python ChooseMyLife/manage.py runserver
+cd ChooseMyLife
+python manage.py runserver
 ```
