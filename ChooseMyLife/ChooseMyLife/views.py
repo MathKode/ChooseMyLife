@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
+from django.http import HttpResponse
 from django.conf import settings
 import shutil
 import os
@@ -202,6 +203,83 @@ def modify_profile_render(request, hash_id):
 
 def ID_render(request):
     page = render(request, "id.html")
+    return page
+
+def Tools_render(request):
+    page = render(request, "tools.html")
+    return page
+
+def export_render(request):
+    try:
+        password=request.COOKIES['PASSWORD']
+    except:
+        password=""
+    if password == "":
+        page = redirect(homepage_render)
+        return page
+    c=["--NAME","ID.txt"]
+    try:
+        file = open("ID.txt","r")
+        for i in file.read().split("\n"):
+            c.append(i)
+        file.close()
+    except:
+        pass
+    c.append("--END")
+    info = read_ID(password)
+    for person in info:
+        hash_id = person[0]
+        c.append("--NAME")
+        c.append(f"{hash_id}.txt")
+        try:
+            file = open(f"{hash_id}.txt","r")
+            for i in file.read().split("\n"):
+                c.append(i)
+            file.close()
+        except:
+            pass
+        c.append("--END")
+    while '' in c:
+        c.remove('')
+    
+    page = HttpResponse("<body style=\"word-wrap: break-word; white-space: pre-wrap;\">\n" + "\n".join(c) + "</body>")
+    return page
+        
+def import_render(request):
+    if request.method == "POST":
+        try: data = request.POST["data"]
+        except: data = None
+        if data != None:
+            _reader = False
+            c=[]
+            t = []
+            for line in data.split('\n'):
+                print(line)
+                if str(line)[0:4] == "--NAME"[0:4]:
+                    print("HERE")
+                    _reader=True
+                    t = []
+                elif str(line)[0:3] == "--END"[0:3]:
+                    _reader=False
+                    if t != []:
+                        c.append(t)
+                elif _reader:
+                    t.append(line[:-1])
+            for line in c:
+                try:
+                    file = open(line[0], "r")
+                    content = file.read().split('\n')
+                    file.close()
+                except:
+                    content=[]
+                for i in line[1:]:
+                    content.append(i)
+                file = open(line[0], "w")
+                file.write("\n".join(content))
+                file.close()
+            page = redirect(desktop_render)
+            return page
+    page = render(request, "import.html")
     return page
 
 
