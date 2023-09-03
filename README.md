@@ -12,8 +12,9 @@ Or Download the zip here : [Zip_File](https://github.com/MathKode/ChooseMyLife/a
 
 ### Windows
 
-First configure the start up file
+Configure the start up file
 ```
+git clone https://github.com/MathKode/ChooseMyLife/
 pip install django
 cd ChooseMyLife\ChooseMyLife
 @echo off
