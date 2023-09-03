@@ -10,18 +10,16 @@ git clone https://github.com/MathKode/ChooseMyLife/
 Or Download the zip here : [Zip_File](https://github.com/MathKode/ChooseMyLife/archive/refs/heads/main.zip)
 
 
-Second Step : Install the python lib.
+### Windows
 
+First configure the start up file
 ```
 pip install django
 cd ChooseMyLife\ChooseMyLife
 @echo off
 echo cd %cd% > start_up.bat
 echo python manage.py runserver >> start_up.bat
-echo.
-echo RUN AS ADMINISTRATOR :
-echo copy "%cd%\start_up.bat"  "%ProgramData%\Microsoft\Windows\Start Menu\Programs\choosemylife.bat"
-echo.
 @echo on
-python manage.py runserver
+
 ```
+Then execute ``start_up.bat`` wherever on your laptop : it will launch the script !
