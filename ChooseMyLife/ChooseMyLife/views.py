@@ -176,7 +176,10 @@ def modify_profile_render(request, hash_id):
             src=path + "/" + f"{hash_id}.jpeg"
             dst=path + "/" + picture_name
             print("COPY IMAGE :", src, dst)
-            shutil.copy(src, dst)
+            try:
+                shutil.copy(src, dst)
+            except:
+                print("ERROR #182")
         #Copie des mots de passe
         file=open(f"{hash_id}.txt","r")
         c=file.read()
