@@ -20,6 +20,7 @@ cd ChooseMyLife\ChooseMyLife
 echo cd %cd% > start_up.bat
 echo python manage.py runserver >> start_up.bat
 @echo on
+explorer .
 
 ```
 Then execute ``start_up.bat`` wherever on your laptop : it will launch the script !
