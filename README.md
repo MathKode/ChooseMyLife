@@ -1,6 +1,9 @@
 # ChooseMyLife
 It's more than a simple local-password manager : yep, it's here to make easier the internet Anonymat !
 
+<img src="Documentation/1.png" style="width:500px;">
+
+
 ## Installation 
 
 First Step : Get the script on your laptop !
@@ -33,3 +36,11 @@ If you want to execute the script at every start up, so copy the start_up.bat to
 ```
 %APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\
 ```
+
+## Illustation
+
+Modify People Page (same as create people)
+<img src="Documentation/2.png" style="width:500px;">
+
+Password Manager (click on it to copy the password)
+<img src="Documentation/3.png" style="width:500px;">
