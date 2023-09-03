@@ -14,6 +14,6 @@ Second Step : Install the python lib.
 
 ```
 pip install django
-cd ChooseMyLife
+cd ChooseMyLife\ChooseMyLife
 python manage.py runserver
 ```
