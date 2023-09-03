@@ -18,7 +18,32 @@ cd ChooseMyLife\ChooseMyLife
 @echo off
 echo cd %cd% > start_up.bat
 echo python manage.py runserver >> start_up.bat
-copy "start_up.bat"  "%ProgramData%\Microsoft\Windows\Start Menu\Programs\ok.bat"
+
+:: Tunr into ADMIN (to copy the start_up.bat file)
+:: from https://stackoverflow.com/questions/11525056/how-to-create-a-batch-file-to-run-cmd-as-administrator
+>nul 2>&1 "%SYSTEMROOT%\system32\cacls.exe" "%SYSTEMROOT%\system32\config\system"
+
+if '%errorlevel%' NEQ '0' (
+    echo Requesting administrative privileges...
+    goto UACPrompt
+) else ( goto gotAdmin )
+
+:UACPrompt
+    echo Set UAC = CreateObject^("Shell.Application"^) > "%temp%\getadmin.vbs"
+    set params = %*:"="
+    echo UAC.ShellExecute "cmd.exe", "/c %~s0 %params%", "", "runas", 1 >> "%temp%\getadmin.vbs"
+
+    "%temp%\getadmin.vbs"
+    del "%temp%\getadmin.vbs"
+    exit /B
+
+:gotAdmin
+    pushd "%CD%"
+    CD /D "%~dp0"
+::--------------------------------------
+
+copy "start_up.bat"  "%ProgramData%\Microsoft\Windows\Start Menu\Programs\choosemylife.bat"
+exit
 @echo on
 python manage.py runserver
 ```
