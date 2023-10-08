@@ -29,6 +29,7 @@ urlpatterns = [
     path('tools/',Tools_render),
     path('export/',export_render),
     path('import/',import_render),
+    path('exportplain/',export_plain_render),
     re_path(r'^profile/(?P<hash_id>\w+)/$', profile_render),
     re_path(r'^modify/(?P<hash_id>\w+)/$', modify_profile_render),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

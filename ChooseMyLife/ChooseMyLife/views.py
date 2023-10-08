@@ -12,7 +12,7 @@ def homepage_render(request):
         password = request.POST["password"]
         if password!="":
             page = redirect(desktop_render)
-            page.set_cookie("PASSWORD",password,max_age=600)
+            page.set_cookie("PASSWORD",password,max_age=1800)
             return page    
     page = render(request, "homepage.html")
     return page
@@ -28,13 +28,13 @@ def profile_render(request, hash_id):
     if request.method == "GET":
         #Verif si c'est pour la suppression d'un mp
         try:
-            print("here")
+            #print("here")
             usr = request.GET['remove_username']
-            print(usr)
+            #print(usr)
             st = request.GET['remove_site']
-            print("REMOVE",st,usr)
+            #print("REMOVE",st,usr)
             supp_password(hash_id,password,st,usr)
-            print("Remove success")
+            #print("Remove success")
         except: pass
     if request.method == "POST":
         try:
@@ -66,7 +66,7 @@ def profile_render(request, hash_id):
             if i[6] != "": sex=i[6]
             if i[5] != "": pic="../media/" + i[5]
     mp_list = read_password(hash_id, password)
-    print("MP LIST:",mp_list)
+    #print("MP LIST:",mp_list)
     context={"hash_id":hash_id, "first_name":first_name, "last_name":last_name, "mp_list":mp_list, "birthday":birthday, "sex":sex, "pic":pic}
     page = render(request, "profile.html", context)
     return page
@@ -86,7 +86,7 @@ def desktop_render(request):
     #create_ID("jhdqkjhkjqzhdkjqzhdkjqzhd","jijdiqjdijqzjdiqzd","ijijijij",'ijijidqjildjlqijdlqizjdlqizjdlqijdzlqizjdlqzdij',"../media/face1.jpeg","F",password)
     #create_ID("Jules","KREDER BAIL","11/03/2006","Thionville","","M",password)
     people = read_ID(password)
-    print("PEOPLE :", people)
+    #print("PEOPLE :", people)
     context={"people": people}
     page = render(request, "deskboard.html", context)
     return page
@@ -138,7 +138,7 @@ def modify_profile_render(request, hash_id):
     for i in all_info:
         if str(i[0]) == hash_id:
             info = i
-    print(info)
+    #print(info)
 
     if request.method == "POST":
         try:first_name = request.POST["fname"]
@@ -161,8 +161,8 @@ def modify_profile_render(request, hash_id):
             if str(i[5]) == picture_name:
                 new_info = i
                 new_hashid = i[0]
-        print("NEW INFO", new_info)
-        print("NEW HASHID", new_hashid)
+        #print("NEW INFO", new_info)
+        #print("NEW HASHID", new_hashid)
 
         if picture != "":
             try: 
@@ -172,10 +172,10 @@ def modify_profile_render(request, hash_id):
         else:
             #Garde la même image
             path = settings.MEDIA_ROOT
-            print(path)
+            #print(path)
             src=path + "/" + f"{hash_id}.jpeg"
             dst=path + "/" + picture_name
-            print("COPY IMAGE :", src, dst)
+            #print("COPY IMAGE :", src, dst)
             try:
                 shutil.copy(src, dst)
             except:
@@ -257,9 +257,9 @@ def import_render(request):
             c=[]
             t = []
             for line in data.split('\n'):
-                print(line)
+                #print(line)
                 if str(line)[0:4] == "--NAME"[0:4]:
-                    print("HERE")
+                    #print("HERE")
                     _reader=True
                     t = []
                 elif str(line)[0:3] == "--END"[0:3]:
@@ -285,6 +285,38 @@ def import_render(request):
     page = render(request, "import.html")
     return page
 
+def export_plain_render(request):
+    try:
+        password=request.COOKIES['PASSWORD']
+    except:
+        password=""
+    if password == "":
+        page = redirect(homepage_render)
+        return page
+    
+    c=[]
+    info_id = read_ID(password)
+    t=0
+    for _id_ in info_id:
+        c.append(f"Identity {t} :")
+        c.append(f"    FName : {_id_[1]}")
+        c.append(f"    LName : {_id_[2]}")
+        c.append(f"    Birth : {_id_[3]}")
+        c.append(f"    City  : {_id_[4]}")
+        c.append(f"    Sex   : {_id_[6]}")
+        pw = read_password(_id_[0], password)
+        print("\n-------PW : \n",pw)
+        tt=0
+        for site, username, mp in pw:
+            c.append(f"        {tt}. {site}")
+            c.append(f"                {username}")
+            c.append(f"                {mp}")
+            tt+=1
+        t+=1
+        if t<len(info_id):
+            c.append(" ")
+    page = HttpResponse("<body style=\"word-wrap: break-word; white-space: pre-wrap;\">\n" + "\n".join(c) + "</body>")
+    return page
 
 def create_ID(first_name,last_name,birthday,city,sex,password):
     from random import randint
@@ -300,12 +332,12 @@ def create_ID(first_name,last_name,birthday,city,sex,password):
     hash_id = f"{str(my_hash(str(first_name+last_name+str(randint(1000000,10000000))+str(datetime.timestamp(datetime.now())))))}"
     picture = f"{hash_id}.jpeg"
     info=[hash_id,first_name,last_name,birthday,city,picture,sex]
-    print("NEW MEMBER INFO",info)
+    #print("NEW MEMBER INFO",info)
     info_crypt=[]
     for i in info:
         info_crypt.append(crypt_data(i,password))
     info_crypt2=";info;".join(info_crypt)
-    print("NEW MEMBER INFO CRYPT :",info_crypt)
+    #print("NEW MEMBER INFO CRYPT :",info_crypt)
     c.append(crypt_data(info_crypt2,password))
     file = open("ID.txt","w")
     file.write("\n".join(c))
@@ -318,13 +350,13 @@ def supp_ID(hash_id, password):
     try:
         c=read_ID(password)
         result=[]
-        print("BEFORE SUPP : ",c)
+        #print("BEFORE SUPP : ",c)
         for i in c:
             #Ne l'ajoute pas si le hash correspond à la personne qu'on veut kick
             print(i)
             if str(i[0]) != str(hash_id):
                 result.append(i)
-        print("AFTER SUPP : ",result,"\n\n\n")
+        #print("AFTER SUPP : ",result,"\n\n\n")
         crypt1=[]
         for i in result:
             r=[]
@@ -352,7 +384,7 @@ def read_ID(password):
         file.close()
     except:
         return []
-    print("READ CONTENT ID.TXT :",c)
+    #print("READ CONTENT ID.TXT :",c)
     decrypt1=[]
     for i in c:
         decrypt1.append(decrypt_data(i,password))
@@ -509,12 +541,12 @@ def my_hash(txt):
                 final_buff.append(j)
             t+=1
     txt = nb_to_txt(final_buff)
-    print("NEW HASH :",txt)
+    #print("NEW HASH :",txt)
     return txt
 
 
 def create_password(hash_id, password, site_name, username, site_password):
-    print("Here to create password")
+    #print("Here to create password")
     try:
         file = open(f"{hash_id}.txt","r")
         c = file.read().split("\n")
@@ -525,10 +557,10 @@ def create_password(hash_id, password, site_name, username, site_password):
     i1 = crypt_data(username, password)
     i2 = crypt_data(site_password, password)
     i3 = ";site;".join([i0, i1,i2])
-    print("I3 :",i3)
+    #print("I3 :",i3)
     i4 = crypt_data(i3,password)
     c.append(i4)
-    print("Crypt data :",c)
+    #print("Crypt data :",c)
     file = open(f"{hash_id}.txt", "w")
     file.write("\n".join(c))
     file.close()
@@ -605,7 +637,7 @@ def _compare_word(w1,w2,alphabet):
 
 def sort_password_alphabetic(mp_list):
     alphabet = "abcdefghijklmnopqrstuvwxyz0123456789"
-    print("UNSORT MP",mp_list)
+    #print("UNSORT MP",mp_list)
     result=[] # [ [site, username, password ] ]
     for mp in mp_list:
         w1 = str(mp[0]).lower()
@@ -621,4 +653,3 @@ def sort_password_alphabetic(mp_list):
         try:result.insert(position,mp)
         except:result.append(mp)
     return result
-            
